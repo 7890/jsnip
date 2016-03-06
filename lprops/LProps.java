@@ -1,27 +1,20 @@
-
 //http://docs.oracle.com/javase/tutorial/reflect/member/fieldTypes.html
-
 //tb/160306
-
 import java.util.Properties;
 import java.io.InputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Field;
-
 //========================================================================
 //========================================================================
 class LProps
 {
 	public LProps(){}
-
 //========================================================================
 	public static boolean load(String configfile_uri, Object configurable_object)
 	{
 		Properties props=new Properties();
 		InputStream is=null;
- 
-		//try loading from the current directory
 		try 
 		{
 			File f=new File(configfile_uri);
@@ -29,28 +22,23 @@ class LProps
 			{
 				return false;
 			}
-
 			is=new FileInputStream(f);
 			if(is==null)
 			{
 				return false;
 			}
-
 			props.load(is);
 			if(props==null)
 			{
 				return false;
 			}
-
 			Class<?> c = configurable_object.getClass();
-
 			Field[] fields = c.getFields();
 			for(int i=0; i<fields.length;i++)
 			{
 //				System.err.println("field "+i+" : "+fields[i]);
 				Class ctype=fields[i].getType();
 				String fname=fields[i].getName();
-
 				if(props.getProperty(fname)!=null)
 				{
 //					System.err.println("found matching member variable property in file");
