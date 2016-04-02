@@ -8,7 +8,7 @@ c=foo\nbar
 d=false
 _EOF_
 
-javac *.java && java LPropsTest "$tmpfile"
+javac -source 1.6 -target 1.6 *.java && java LPropsTest "$tmpfile"
 
 rm -f "$tmfile"
 
