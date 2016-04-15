@@ -2,10 +2,14 @@
 
 tmpfile="`mktemp`"
 cat - > "$tmpfile" << _EOF_
-a=1
-b=2.3
-c=foo\nbar
-d=false
+ai=66
+al=77
+af=88.9
+ad=99.909090909
+as=foo
+ac=\`
+ab=true
+apriv=99
 _EOF_
 
 javac -source 1.6 -target 1.6 *.java && java LPropsTest "$tmpfile"
@@ -13,16 +17,23 @@ javac -source 1.6 -target 1.6 *.java && java LPropsTest "$tmpfile"
 rm -f "$tmfile"
 
 exit
-###################
+###########
 values before load:
-var a: 23
-var b: 78.9
-var c: hallo velo
-var d: false
+ai=23
+al=24
+af=78.9
+ad=79.909090909
+as=hallo velo
+ac=@
+ab=false
+apriv=0
 
 values after load:
-var a: 1
-var b: 2.3
-var c: foo
-bar
-var d: false
+ai=66
+al=77
+af=88.9
+ad=99.909090909
+as=foo
+ac=`
+ab=true
+apriv=0

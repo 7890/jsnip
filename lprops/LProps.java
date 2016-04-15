@@ -41,16 +41,34 @@ class LProps
 						try{fields[i].setInt(configurable_object, Integer.parseInt(props.getProperty(fname)));}
 						catch(Exception e){System.err.println(""+e);}
 					}
+					if(ctype==long.class || ctype==Long.class)
+					{
+//						System.err.println("found long");
+						try{fields[i].setLong(configurable_object, Long.parseLong(props.getProperty(fname)));}
+						catch(Exception e){System.err.println(""+e);}
+					}
 					else if(ctype==float.class || ctype==Float.class)
 					{
 //						System.err.println("found float");
 						try{fields[i].setFloat(configurable_object, Float.parseFloat(props.getProperty(fname)));}
 						catch(Exception e){System.err.println(""+e);}
 					}
+					else if(ctype==double.class || ctype==Double.class)
+					{
+//						System.err.println("found double");
+						try{fields[i].setDouble(configurable_object, Double.parseDouble(props.getProperty(fname)));}
+						catch(Exception e){System.err.println(""+e);}
+					}
 					else if(ctype==String.class)
 					{
 //						System.err.println("found string");
 						try{fields[i].set(configurable_object, props.getProperty(fname));}
+						catch(Exception e){System.err.println(""+e);}
+					}
+					else if(ctype==char.class)
+					{
+//						System.err.println("found char");
+						try{fields[i].setChar(configurable_object, (props.getProperty(fname).charAt(0)));}
 						catch(Exception e){System.err.println(""+e);}
 					}
 					else if(ctype==boolean.class || ctype==boolean.class)
