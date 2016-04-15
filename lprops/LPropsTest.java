@@ -1,3 +1,5 @@
+//========================================================================
+//========================================================================
 class LPropsTest
 {
 	public int 	ai=23;
@@ -10,8 +12,7 @@ class LPropsTest
 
 	private int	apriv=0;
 
-	public LPropsTest(){}
-
+//========================================================================
 	public static void main(String[] args) throws Exception
 	{
 		if(args.length!=1)
@@ -19,38 +20,45 @@ class LPropsTest
 			System.err.println("first arg: <properties file>\n");
 			System.exit(1);
 		}
-
-		LPropsTest test=new LPropsTest();
-		
+		new LPropsTest(args);
+	}
+//========================================================================
+	public LPropsTest(String[] args)
+	{
 		System.err.println("values before load:");
-
 		//member variables after instance created
-		System.err.println("ai="+test.ai);
-		System.err.println("al="+test.al);
-		System.err.println("af="+test.af);
-		System.err.println("ad="+test.ad);
-		System.err.println("as="+test.as);
-		System.err.println("ac="+test.ac);
-		System.err.println("ab="+test.ab);
-		System.err.println("apriv="+test.apriv);
+		System.err.println("ai="+ai);
+		System.err.println("al="+al);
+		System.err.println("af="+af);
+		System.err.println("ad="+ad);
+		System.err.println("as="+as);
+		System.err.println("ac="+ac);
+		System.err.println("ab="+ab);
+		System.err.println("apriv="+apriv);
 
-		if(!LProps.load(args[0],test))
+		System.err.println("\nvalues found by dumpObject:");
+		System.err.println(LProps.dumpObject(this));
+
+		System.err.println("storing object members to file a.properties");
+		LProps.store("a.properties",this);
+
+		if(!LProps.load(args[0],this))
 		{
-			System.err.println("could not load properties file");
+			System.err.println("could not load properties file "+args[0]);
 		}
 
 		System.err.println("\nvalues after load:");
 
 		//member variables afer propertis file loaded
-		System.err.println("ai="+test.ai);
-		System.err.println("al="+test.al);
-		System.err.println("af="+test.af);
-		System.err.println("ad="+test.ad);
-		System.err.println("as="+test.as);
-		System.err.println("ac="+test.ac);
-		System.err.println("ab="+test.ab);
-		System.err.println("apriv="+test.apriv);
-	}//end main
+		System.err.println("ai="+ai);
+		System.err.println("al="+al);
+		System.err.println("af="+af);
+		System.err.println("ad="+ad);
+		System.err.println("as="+as);
+		System.err.println("ac="+ac);
+		System.err.println("ab="+ab);
+		System.err.println("apriv="+apriv);
+	}//end constructor
 }//end class LPropsTest
 
 /*

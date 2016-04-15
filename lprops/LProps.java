@@ -8,12 +8,75 @@ import java.io.InputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.StringReader;
 import java.lang.reflect.Field;
 //========================================================================
 //========================================================================
 class LProps
 {
 	public LProps(){}
+
+//========================================================================
+	public static String dumpObject(Object configurable_object)
+	{
+		try
+		{
+			Class<?> c = configurable_object.getClass();
+			Field[] fields = c.getFields();
+
+			StringBuffer sb=new StringBuffer();
+			String nl = System.getProperty("line.separator");
+
+			for (Field field : fields)
+			{
+				Class ctype=field.getType();
+				if(ctype==int.class || ctype==Integer.class
+					|| ctype==long.class || ctype==Long.class
+					|| ctype==float.class || ctype==Float.class
+					|| ctype==double.class || ctype==Double.class
+					|| ctype==String.class
+					|| ctype==char.class
+					|| ctype==boolean.class || ctype==boolean.class
+				)
+				{
+					sb.append(field.getName()+"="+field.get(configurable_object)+nl);
+				}
+			}
+			return sb.toString();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return "";
+	}
+
+//========================================================================
+	public static boolean store(String configfile_uri, String all)
+	{
+		Properties props=new Properties();
+		if(props==null){return false;}
+		try
+		{
+			props.load(new StringReader(all));
+			getOrderedProperties(props).store(new FileOutputStream(new File(configfile_uri)), null);
+			return true;
+		}
+		catch(Exception e){e.printStackTrace();}
+		return false;
+	}
+
+//========================================================================
+	public static boolean store(String configfile_uri, Object configurable_object)
+	{
+		String all=dumpObject(configurable_object);
+		if(all.equals(""))
+		{
+			return false;
+		}
+
+		return store(configfile_uri, all);
+	}
 
 //========================================================================
 	public static boolean load(String configfile_uri, Object configurable_object)
