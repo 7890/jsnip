@@ -58,6 +58,16 @@ class LPropsTest
 		System.err.println("ac="+ac);
 		System.err.println("ab="+ab);
 		System.err.println("apriv="+apriv);
+
+		System.err.println("\ntesting LPropsMan:");
+
+		LPropsMan p=new LPropsMan();
+		p.add("a.properties");//current directory
+		p.add("b.properties");
+		p.add(System.getProperty("user.home")+"/.na.prop");
+		p.load(this);
+		System.err.println("\nafter overloading:");
+		System.err.println(LProps.dumpObject(this));
 	}//end constructor
 }//end class LPropsTest
 

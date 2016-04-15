@@ -10,6 +10,7 @@ as=foo
 ac=\`
 ab=true
 apriv=99
+lprops_pre_load_dump=my label
 _EOF_
 
 javac -source 1.6 -target 1.6 *.java && java LPropsTest "$tmpfile"
