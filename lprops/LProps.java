@@ -14,7 +14,7 @@ import java.util.Vector;
 
 //========================================================================
 //========================================================================
-class LProps
+public class LProps
 {
 	private final static boolean PROCESS_INSTRUCTIONS=true;
 
@@ -156,6 +156,20 @@ class LProps
 					{
 //						System.err.println("found boolean");
 						try{fields[i].setBoolean(configurable_object, Boolean.parseBoolean(props.getProperty(fname)));}
+						catch(Exception e){System.err.println(""+e);}
+					}
+					else if(ctype==Vector.class)
+					{
+//						System.err.println("found vector");
+						try
+						{
+							String tokens[]=props.getProperty(fname).split(",");
+							Vector v = (Vector)fields[i].get(configurable_object);
+							for(int k=0;k<tokens.length;k++)
+							{
+								v.add(tokens[k].trim());
+							}
+						}
 						catch(Exception e){System.err.println(""+e);}
 					}
 					///else if byte,short,long,char,double
