@@ -63,6 +63,7 @@ public class LProps
 							sb.append(",");
 						}
 					}
+					sb.append(nl);
 				}
 			}
 			return sb.toString();
