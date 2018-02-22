@@ -6,3 +6,4 @@
 
 #ignore generated shared object files
 *.so
+*.dylib
