@@ -5,9 +5,10 @@ import java.nio.*;
 class DBBuffer
 {
 	//in bytes
-	static long buf_size=16 * 4;
+	static long buf_size=48000 * 4;
 	static
 	{
+		System.err.println(""+System.currentTimeMillis());
 		System.loadLibrary("DBBuffer");
 	}
 
@@ -15,10 +16,13 @@ class DBBuffer
 
 	public static void main(String[] args)
 	{
+		System.err.println(""+System.currentTimeMillis());
 		DBBuffer dbb=new DBBuffer();
 
+		System.err.println(""+System.currentTimeMillis());
 		//let c library create a direct byte buffer and return it to bb
 		ByteBuffer bb=dbb.create(buf_size);
+		System.err.println(""+System.currentTimeMillis());
 
 		//the buffer was created BIG_ENDIAN (default)
 		//buffer contains LITTLE_ENDIAN data, toggle "view"
@@ -39,8 +43,10 @@ class DBBuffer
 		FloatBuffer fb=((ByteBuffer)bb.rewind()).asFloatBuffer();
 		while (fb.hasRemaining())
 		{
-			System.out.println(fb.position() + " -> " + fb.get());
+			float f=fb.get();
+//			System.out.println(fb.position() + " -> " + fb.get());
 		}
+		System.err.println(""+System.currentTimeMillis());
 	}//end main()
 }
 //EOF
