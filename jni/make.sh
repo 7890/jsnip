@@ -5,6 +5,20 @@
 #this needs to be adjusted to local circumstances
 PATH_TO_JNI_H="/usr/lib/jvm/java-8-openjdk-amd64/include/"
 PATH_TO_JNI_MD_H="/usr/lib/jvm/java-8-openjdk-amd64/include/linux/"
+LIB_EXTENSION="so"
+FLAGS="-shared -fPIC"
+COMPILER=cc
+
+echo "$OSTYPE"|grep -i darwin
+ret=$?
+if [ $ret -eq 0 ]
+then
+echo "found mac os"
+PATH_TO_JNI_H="/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers/"
+PATH_TO_JNI_MD_H="/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers/"
+LIB_EXTENSION="dylib"
+FLAGS="-dynamiclib"
+fi
 
 LINK_FLAGS=
 LIBRARY_PATH="."
@@ -41,9 +55,10 @@ function compile_part
 	javah -jni ${NAME}
 	echo "dummy implement ${NAME}.c"
 #..
-	echo "compiling ${NAME}.c to lib${NAME}.so"
-	cc -o lib${NAME}.so ${NAME}.c \
-		-shared -fPIC \
+	echo "compiling ${NAME}.c to lib${NAME}.${LIB_EXTENSION}"
+	${COMPILER} ${NAME}.c \
+		-o lib${NAME}.${LIB_EXTENSION} \
+		${FLAGS} \
 		-I"$PATH_TO_JNI_H" \
 		-I"$PATH_TO_JNI_MD_H" \
 		$LINK_FLAGS
@@ -59,7 +74,7 @@ function clean_part
 	#clean (previous) builds
 	rm -f ${NAME}.class
 	rm -f ${NAME}.h
-	rm -f lib${NAME}.so
+	rm -f lib${NAME}.${LIB_EXTENSION}
 }
 
 function clean
