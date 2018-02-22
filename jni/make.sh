@@ -7,7 +7,11 @@ PATH_TO_JNI_H="/usr/lib/jvm/java-8-openjdk-amd64/include/"
 PATH_TO_JNI_MD_H="/usr/lib/jvm/java-8-openjdk-amd64/include/linux/"
 LIB_EXTENSION="so"
 FLAGS="-shared -fPIC"
+LINK_FLAGS="-lpthread"
+
 COMPILER=cc
+
+LIBRARY_PATH="."
 
 echo "$OSTYPE"|grep -i darwin
 ret=$?
@@ -18,10 +22,8 @@ PATH_TO_JNI_H="/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers/"
 PATH_TO_JNI_MD_H="/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers/"
 LIB_EXTENSION="dylib"
 FLAGS="-dynamiclib"
+LINK_FLAGS=""
 fi
-
-LINK_FLAGS=
-LIBRARY_PATH="."
 
 echo "test header file existence 'jni.h', 'jni_md.h'"
 
@@ -92,6 +94,7 @@ function compile
 	compile_part HelloWorld
 	compile_part DBBuffer
 	compile_part CreateObject
+	compile_part Callback
 }
 
 compile
