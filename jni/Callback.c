@@ -59,6 +59,7 @@ void *thread1_function(void* arg)
 		callback(counter++);
 		usleep(10000);
 	}
+	return 0;
 }
 
 void callback(long val)
