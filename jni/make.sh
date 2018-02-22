@@ -1,10 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 
 #//tb/1802
 
 #this needs to be adjusted to local circumstances
 PATH_TO_JNI_H="/usr/lib/jvm/java-8-openjdk-amd64/include/"
 PATH_TO_JNI_MD_H="/usr/lib/jvm/java-8-openjdk-amd64/include/linux/"
+
+LINK_FLAGS=
+LIBRARY_PATH="."
 
 echo "test header file existence 'jni.h', 'jni_md.h'"
 
@@ -28,24 +31,55 @@ which javac >/dev/null || (echo "javac not found" && return 1) || return 1
 which javah >/dev/null || (echo "javah not found" && return 1) || return 1
 which cc >/dev/null || (echo "cc not found" && return 1) || return 1
 
-#clean (previous) builds
+function compile_part
+{
+	NAME="$1"
 
-rm -f HelloWorld.class
-rm -f HelloWorld.h
-rm -f libHelloWorld
-
-echo "compiling HelloWorld.java"
-javac HelloWorld.java
-echo "creating HelloWorld.h"
-javah -jni HelloWorld
-echo "dummy implement HelloWorld.c"
+	echo "compiling ${NAME}.java"
+	javac ${NAME}.java
+	echo "creating ${NAME}.h"
+	javah -jni ${NAME}
+	echo "dummy implement ${NAME}.c"
 #..
-echo "compiling HelloWorld.c to libHelloWorld.so"
-cc -o libHelloWorld.so HelloWorld.c \
-	-shared -fPIC \
-	-I"$PATH_TO_JNI_H" \
-	-I"$PATH_TO_JNI_MD_H"
-echo "running java Hello World"
-echo "java -Djava.library.path=. HelloWorld"
-java -Djava.library.path=. HelloWorld
-echo "done."
+	echo "compiling ${NAME}.c to lib${NAME}.so"
+	cc -o lib${NAME}.so ${NAME}.c \
+		-shared -fPIC \
+		-I"$PATH_TO_JNI_H" \
+		-I"$PATH_TO_JNI_MD_H" \
+		$LINK_FLAGS
+	echo "= running java ${NAME}"
+	echo "java -Djava.library.path=$LIBRARY_PATH ${NAME}"
+	java -Djava.library.path="$LIBRARY_PATH" -cp . ${NAME}
+	echo "done."
+}
+
+function clean_part
+{
+	NAME="$1"
+	#clean (previous) builds
+	rm -f ${NAME}.class
+	rm -f ${NAME}.h
+	rm -f lib${NAME}.so
+}
+
+function clean
+{
+	echo "cleaning"
+	clean_part HelloWorld
+	clean_part DBBuffer
+	clean_part CreateObject
+	rm -f "CreateObject\$MyClass.class"
+	rm -f "CreateObject_MyClass.h"
+}
+
+function compile
+{
+	compile_part HelloWorld
+	compile_part DBBuffer
+	compile_part CreateObject
+}
+
+compile
+#clean
+
+#EOF
