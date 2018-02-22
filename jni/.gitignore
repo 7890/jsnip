@@ -1,0 +1,8 @@
+#ignore generated header files
+*.h
+
+#ignore generated class files
+*.class
+
+#ignore generated shared object files
+*.so
