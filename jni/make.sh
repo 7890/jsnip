@@ -11,7 +11,12 @@ LINK_FLAGS="-lpthread"
 
 COMPILER=cc
 
-LIBRARY_PATH="."
+SOURCE_DIR="src"
+BUILD_DIR="_build"
+
+LIBRARY_PATH="$BUILD_DIR"
+
+mkdir -p "$BUILD_DIR"
 
 echo "$OSTYPE"|grep -i darwin
 ret=$?
@@ -52,21 +57,22 @@ function compile_part
 	NAME="$1"
 
 	echo "compiling ${NAME}.java"
-	javac ${NAME}.java
+	javac -d ${BUILD_DIR} ${SOURCE_DIR}/${NAME}.java
 	echo "creating ${NAME}.h"
-	javah -jni ${NAME}
+	javah -jni -cp ${BUILD_DIR} -d ${BUILD_DIR} ${NAME}
 	echo "dummy implement ${NAME}.c"
 #..
 	echo "compiling ${NAME}.c to lib${NAME}.${LIB_EXTENSION}"
-	${COMPILER} ${NAME}.c \
-		-o lib${NAME}.${LIB_EXTENSION} \
+	${COMPILER} ${SOURCE_DIR}/${NAME}.c \
+		-o ${BUILD_DIR}/lib${NAME}.${LIB_EXTENSION} \
 		${FLAGS} \
+		-I${BUILD_DIR} \
 		-I"$PATH_TO_JNI_H" \
 		-I"$PATH_TO_JNI_MD_H" \
 		$LINK_FLAGS
 	echo "= running java ${NAME}"
-	echo "java -Djava.library.path=$LIBRARY_PATH ${NAME}"
-	java -Djava.library.path="$LIBRARY_PATH" -cp . ${NAME}
+	echo "java -Djava.library.path=$LIBRARY_PATH -cp ${BUILD_DIR} ${NAME}"
+	java -Djava.library.path="$LIBRARY_PATH" -cp ${BUILD_DIR} ${NAME}
 	echo "done."
 }
 
@@ -74,9 +80,9 @@ function clean_part
 {
 	NAME="$1"
 	#clean (previous) builds
-	rm -f ${NAME}.class
-	rm -f ${NAME}.h
-	rm -f lib${NAME}.${LIB_EXTENSION}
+	rm -f ${BUILD_DIR}/${NAME}.class
+	rm -f ${BUILD_DIR}/${NAME}.h
+	rm -f ${BUILD_DIR}/lib${NAME}.${LIB_EXTENSION}
 }
 
 function clean
@@ -85,8 +91,9 @@ function clean
 	clean_part HelloWorld
 	clean_part DBBuffer
 	clean_part CreateObject
-	rm -f "CreateObject\$MyClass.class"
-	rm -f "CreateObject_MyClass.h"
+	rm -f ${BUILD_DIR}/"CreateObject\$MyClass.class"
+	rm -f ${BUILD_DIR}/"CreateObject_MyClass.h"
+	clean_part Callback
 }
 
 function compile
