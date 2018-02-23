@@ -6,7 +6,7 @@
 PATH_TO_JNI_H="/usr/lib/jvm/java-8-openjdk-amd64/include/"
 PATH_TO_JNI_MD_H="/usr/lib/jvm/java-8-openjdk-amd64/include/linux/"
 LIB_EXTENSION="so"
-FLAGS="-shared -fPIC"
+FLAGS="-std=c89 -shared -fPIC"
 LINK_FLAGS="-lpthread"
 
 COMPILER=cc
